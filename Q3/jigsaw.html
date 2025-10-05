@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Jigsaw Puzzle Maker — SSD Demo</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header container">
+    <h1>Jigsaw Puzzle Maker</h1>
+    <p class="lead">Upload an image, pick difficulty and solve the puzzle — single player.</p>
+  </header>
+
+  <main class="puzzle-wrap container">
+
+    <!-- LEFT: Board + staging -->
+    <section class="board-wrap card" id="boardCard" aria-label="Puzzle board area">
+      <div id="completeBanner" class="complete-banner" role="status" aria-live="polite">🎉 Puzzle Completed!</div>
+
+      <!-- helper above board -->
+      <div id="topHelper" class="top-helper">
+        Upload an image on the right → choose difficulty → Create. Pieces appear immediately once image is selected.
+        <button id="dismissHelper" class="helper-close" aria-label="Dismiss helper">✕</button>
+      </div>
+
+      <!-- board holder -->
+      <div id="board" class="board" tabindex="0" aria-label="Puzzle board"></div>
+
+      <!-- staging area (pieces thumbnails appear here immediately) -->
+      <div class="staging card" id="staging" aria-label="Pieces staging area"></div>
+    </section>
+
+    <!-- RIGHT: Controls & How-to (sidebar) -->
+    <aside class="puzzle-aside">
+
+      <!-- Upload block -->
+      <section class="card upload-card" aria-labelledby="uploadTitle">
+        <h2 id="uploadTitle">Upload Image</h2>
+        <p class="muted">Choose an image from your device. Pieces will generate as soon as the image finishes loading.</p>
+
+        <div class="uploader">
+          <input id="imgfile" type="file" accept="image/*" aria-label="Upload image"/>
+          <button id="sampleBtn" class="btn primary">Use Sample Image</button>
+        </div>
+        <div class="file-hint muted small">Recommended: landscape photos ~ 800×600 or larger.</div>
+      </section>
+
+      <!-- Controls -->
+      <section class="card controls" aria-labelledby="controlsTitle">
+        <h2 id="controlsTitle">Game Controls</h2>
+
+        <div class="controls-grid">
+          <label for="difficulty" class="muted small">Difficulty (pieces)</label>
+          <select id="difficulty" aria-label="Select difficulty">
+            <option value="5">5 (very easy)</option>
+            <option value="20" selected>20 (easy)</option>
+            <option value="40">40 (medium)</option>
+            <option value="80">80 (hard)</option>
+            <option value="100">100 (very hard)</option>
+          </select>
+
+          <button id="createBtn" class="btn primary large">Create Puzzle</button>
+          <button id="shuffleBtn" class="btn large">Shuffle</button>
+          <button id="showBtn" class="btn large">Show Complete</button>
+
+          <div class="controls-extra">
+            <button id="hintBtn" class="btn">Toggle Hint</button>
+            <button id="snapToggle" class="btn">Toggle Snap</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- How to Play -->
+      <section class="card" aria-labelledby="howTitle">
+        <h2 id="howTitle">How to Play</h2>
+        <ol class="muted small">
+          <li>Upload an image or click <strong>Use Sample Image</strong>.</li>
+          <li>Choose difficulty and press <strong>Create Puzzle</strong> (or pieces will appear automatically after upload).</li>
+          <li>Drag pieces from the <em>Pieces</em> area onto the board. Pieces snap near the right spot.</li>
+          <li>Double-click a piece to force-snap it into place.</li>
+        </ol>
+      </section>
+
+      <!-- Live Game Info -->
+      <section class="card" aria-labelledby="infoTitle">
+        <h2 id="infoTitle">Game Info</h2>
+        <p class="muted small">Requested: <strong id="reqPieces">0</strong></p>
+        <p class="muted small">Actual pieces used: <strong id="actualPieces">0</strong></p>
+        <p class="muted small">Placed: <strong id="placed">0</strong></p>
+        <hr/>
+        <div class="muted small">
+          <strong>Tips</strong>
+          <ul>
+            <li>Press <kbd>R</kbd> to reshuffle.</li>
+            <li>Toggle the hint if you need a faint guide.</li>
+          </ul>
+        </div>
+      </section>
+
+    </aside>
+  </main>
+
+  <footer class="site-footer container muted small">
+    <div>Made for demo — Jigsaw Puzzle Maker</div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="../Q6/tracker.js"></script>
+</body>
+</html>

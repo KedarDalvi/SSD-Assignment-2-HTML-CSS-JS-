@@ -1,0 +1,338 @@
+/* Reset default browser styles and set box-sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling with gradient background */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    min-height: 100vh;
+    padding: 2rem;
+    color: #333;
+}
+
+/* Main container for the game */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Header section styling */
+.header {
+    text-align: center;
+    color: white;
+    margin-bottom: 2rem;
+}
+
+/* Main title styling */
+.header h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+/* Subtitle styling */
+.header p {
+    font-size: 1.25rem;
+    color: #cbd5e1;
+}
+
+/* Score board container */
+.score-board {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+/* Individual score item styling */
+.score-item {
+    text-align: center;
+}
+
+/* Score label styling */
+.score-label {
+    color: #6b7280;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+/* Score value styling */
+.score-value {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+/* Player score color (blue) */
+#playerScore {
+    color: #2563eb;
+}
+
+/* Computer score color (red) */
+#computerScore {
+    color: #dc2626;
+}
+
+/* Trophy icon styling */
+.trophy {
+    font-size: 3rem;
+}
+
+/* Main game area styling */
+.game-area {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Message text styling */
+.message {
+    text-align: center;
+    color: #374151;
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+/* Result display container */
+.result-display {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Result text styling */
+.result-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f2937;
+    padding: 1rem;
+    background: #f3f4f6;
+    border-radius: 0.5rem;
+}
+
+/* Choices display container */
+.choices-display {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+/* Individual choice box styling */
+.choice-box {
+    text-align: center;
+}
+
+/* Choice label styling */
+.choice-label {
+    color: #6b7280;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Choice icon styling */
+.choice-icon {
+    font-size: 4rem;
+    padding: 1rem;
+    background: #f3f4f6;
+    border-radius: 1rem;
+    min-width: 120px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* VS text styling */
+.vs-text {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #9ca3af;
+}
+
+/* Buttons container */
+.buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+/* Base button styling */
+.btn {
+    padding: 1.5rem 3rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Button hover effect */
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Button active effect */
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Button icon styling */
+.btn-icon {
+    font-size: 2rem;
+}
+
+/* STOP button styling */
+.btn-stop {
+    background: #dc2626;
+    color: white;
+}
+
+/* STOP button hover effect */
+.btn-stop:hover {
+    background: #b91c1c;
+}
+
+/* GO button styling */
+.btn-go {
+    background: #16a34a;
+    color: white;
+}
+
+/* GO button hover effect */
+.btn-go:hover {
+    background: #15803d;
+}
+
+/* Reset buttons container */
+.reset-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+/* Play Again button styling */
+.btn-reset {
+    background: #3b82f6;
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+}
+
+/* Play Again button hover effect */
+.btn-reset:hover {
+    background: #2563eb;
+}
+
+/* Reset Game button styling */
+.btn-reset-all {
+    background: #6b7280;
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+}
+
+/* Reset Game button hover effect */
+.btn-reset-all:hover {
+    background: #4b5563;
+}
+
+/* Explanation section styling */
+.explanation {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+}
+
+/* Explanation section heading */
+.explanation h3 {
+    color: #1f2937;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+/* Payoff table styling */
+.payoff-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+}
+
+/* Table header and cell styling */
+.payoff-table th,
+.payoff-table td {
+    padding: 1rem;
+    text-align: center;
+    border: 2px solid #e5e7eb;
+}
+
+/* Table header specific styling */
+.payoff-table th {
+    background: #f3f4f6;
+    font-weight: bold;
+    color: #374151;
+}
+
+/* Nash equilibrium cell highlighting */
+.payoff-table .nash {
+    background: #fee2e2;
+    font-weight: bold;
+    color: #dc2626;
+}
+
+/* Explanation text styling */
+.explanation-text {
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+    /* Adjust body padding for mobile */
+    body {
+        padding: 1rem;
+    }
+    
+    /* Adjust header title size for mobile */
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    /* Stack buttons vertically on mobile */
+    .buttons {
+        flex-direction: column;
+    }
+    
+    /* Make buttons full width on mobile */
+    .btn {
+        width: 100%;
+    }
+    
+    /* Adjust choices display for mobile */
+    .choices-display {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    /* Hide VS text on mobile */
+    .vs-text {
+        display: none;
+    }
+}

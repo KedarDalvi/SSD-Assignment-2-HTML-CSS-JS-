@@ -1,0 +1,126 @@
+/* -------------------------
+   Jigsaw puzzle styling — improved controls & layout
+   ------------------------- */
+
+:root{
+  --bg: #fbfdff;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #0f62fe;
+  --glass: rgba(15,98,254,0.06);
+  --border: #e6eefc;
+  --shadow: 0 6px 20px rgba(16,30,62,0.04);
+  --container-w: 1200px;
+}
+
+/* baseline */
+* { box-sizing: border-box; }
+body{
+  margin:0;
+  font-family: Quicksand, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  background: linear-gradient(180deg,#f7fbff 0%, #fbfdff 100%);
+  color:#14213d;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  padding:18px;
+}
+.container{ max-width:var(--container-w); margin:0 auto; }
+
+/* header */
+.site-header { margin-bottom:14px; }
+.site-header h1 { margin:0; font-size:22px; text-align:center; }
+.site-header .lead { margin:6px 0 0 0; color:var(--muted); text-align:center; }
+
+/* layout */
+.puzzle-wrap{
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:20px;
+  align-items:start;
+}
+
+/* card baseline */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  box-shadow:var(--shadow);
+}
+
+/* board column */
+.board-wrap{ position:relative; min-height:160px; overflow:visible; padding-bottom:12px; }
+.complete-banner{
+  position:absolute; left:50%; top:8px; transform:translateX(-50%);
+  background:linear-gradient(90deg,#16a34a,#059669); color:#fff;
+  padding:8px 12px; border-radius:999px; font-weight:700; font-size:13px;
+  display:none; z-index:200;
+}
+.complete-banner.show{ display:inline-block; }
+
+/* small helper above board */
+.top-helper{ background:var(--glass); padding:10px;border-radius:8px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between; gap:10px; }
+.helper-close{ background:transparent;border:none;cursor:pointer;font-weight:700;color:var(--accent) }
+
+/* board area */
+.board{ margin:12px auto; background:linear-gradient(180deg, rgba(15,98,254,0.02), rgba(15,98,254,0.01)); border-radius:8px; overflow:visible; min-height:120px; position:relative; width:100%; max-height:720px; }
+
+/* staging */
+.staging{ margin-top:14px; padding:12px; border-radius:8px; border:1px dashed rgba(15,20,36,0.04); min-height:120px; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start; position:relative; overflow:auto; }
+.staging::before{ content:"Pieces"; position:absolute; transform:translateY(-38px); left:20px; font-size:13px; font-weight:700; color:var(--muted); z-index:10; }
+
+/* upload card */
+.upload-card h2{ margin:0 0 6px 0; font-size:18px }
+.uploader{ display:flex; gap:10px; align-items:center; margin-top:10px; flex-wrap:wrap; }
+.uploader input[type=file]{ padding:8px; border-radius:8px; border:1px solid var(--border); cursor:pointer; background:white; }
+.file-hint{ margin-top:8px }
+
+/* controls */
+.controls h2{ margin:0 0 6px 0; font-size:18px }
+.controls-grid{ display:grid; grid-template-columns:1fr; gap:10px; }
+.controls .btn{ padding:10px 12px; border-radius:10px; border:1px solid rgba(15,20,36,0.08); background:white; cursor:pointer; box-shadow:0 6px 14px rgba(16,30,62,0.03); font-weight:600 }
+.btn.primary{ background: linear-gradient(90deg,var(--accent),#0b53d9); color:white; border:none; box-shadow: 0 8px 20px rgba(15,98,254,0.12); }
+.btn.large{ width:100%; display:inline-block; }
+.controls-extra{ display:flex; gap:8px; margin-top:6px; }
+
+/* how-to and info */
+.card h2{ font-size:16px; margin:0 0 8px 0; color:#0f1724 }
+.muted{ color:var(--muted) }
+.small{ font-size:13px }
+
+/* pieces style (thumbnail & draggable canvases) */
+.piece-thumb{ display:block; border-radius:6px; box-shadow:0 8px 20px rgba(16,30,62,0.06); transition:transform .12s, box-shadow .12s; cursor:grab; touch-action:none; user-select:none; height:80px; }
+.piece-thumb:active{ cursor:grabbing; transform:scale(.98) }
+.piece{ display:block; border-radius:6px; box-shadow:0 8px 20px rgba(16,30,62,0.06); transition:transform .12s, box-shadow .12s; cursor:grab; touch-action:none; user-select:none; }
+.piece:active{ cursor:grabbing; transform:scale(.98) }
+.piece.dragging{ transform: scale(1.03); box-shadow:0 20px 40px rgba(16,30,62,0.18); z-index:99999 !important; opacity:0.98 }
+#board .piece.snapped{ box-shadow:none; border-radius:0; cursor:default }
+
+/* hint canvas — subtle but visible */
+.board-hint {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  border-radius: 6px;
+  z-index: 1;
+  opacity: 0.20;           /* subtle but visible */
+  filter: grayscale(0.35) blur(1px);
+  transition: opacity 200ms ease, filter 200ms ease;
+}
+
+/* ensure board children overflow allowed and layers */
+.board { overflow: visible; position:relative; }
+.pieces-layer { position:absolute; left:0; top:0; width:100%; height:100%; z-index:2; pointer-events:none; }
+
+/* piece positioning via transform */
+.piece { position:absolute; transform:translate(0px,0px); will-change:transform; pointer-events:auto; }
+
+/* responsive */
+@media (max-width:980px){
+  .puzzle-wrap{ grid-template-columns:1fr; }
+  .puzzle-aside{ order:-1 }
+}
+
+/* utilities */
+kbd{ background:#f2f4f8; padding:2px 6px; border-radius:6px; border:1px solid #e6eefc; font-weight:700; }

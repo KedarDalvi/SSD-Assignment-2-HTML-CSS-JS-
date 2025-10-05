@@ -1,0 +1,412 @@
+{
+  "tables": [
+    {
+      "name": "users",
+      "comment": "Application users (admin, staff)",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "Primary key" },
+        { "name": "username", "type": "varchar(100)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "Unique login name" },
+        { "name": "email", "type": "varchar(255)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "User email" },
+        { "name": "password_hash", "type": "varchar(255)", "nullable": "NO", "key": "", "default": null, "extra": "", "comment": "Hashed password" },
+        { "name": "is_active", "type": "tinyint(1)", "nullable": "NO", "key": "", "default": "1", "extra": "", "comment": "Active flag" },
+        { "name": "created_at", "type": "timestamp", "nullable": "NO", "key": "", "default": "CURRENT_TIMESTAMP", "extra": "", "comment": "Record created time" },
+        { "name": "last_login_at", "type": "datetime", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Last login time" }
+      ]
+    },
+    {
+      "name": "user_profiles",
+      "comment": "Extended profile for users",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "user_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to users.id" },
+        { "name": "first_name", "type": "varchar(100)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "First name" },
+        { "name": "last_name", "type": "varchar(100)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Last name" },
+        { "name": "birth_date", "type": "date", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "DOB" },
+        { "name": "bio", "type": "text", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Short biography" },
+        { "name": "timezone", "type": "varchar(50)", "nullable": "YES", "key": "", "default": "UTC", "extra": "", "comment": "Preferred timezone" }
+      ]
+    },
+    {
+      "name": "roles",
+      "comment": "Security roles",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "name", "type": "varchar(100)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "Role name (admin/staff)" },
+        { "name": "description", "type": "varchar(255)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Role description" }
+      ]
+    },
+    {
+      "name": "permissions",
+      "comment": "Atomic permissions used by roles",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "code", "type": "varchar(120)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "Permission code e.g. orders.read" },
+        { "name": "description", "type": "varchar(255)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "What permission allows" }
+      ]
+    },
+    {
+      "name": "user_roles",
+      "comment": "Join table user ⇄ role (many-to-many)",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "user_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to users" },
+        { "name": "role_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to roles" },
+        { "name": "assigned_by", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "User who assigned this role" },
+        { "name": "assigned_at", "type": "timestamp", "nullable": "NO", "key": "", "default": "CURRENT_TIMESTAMP", "extra": "", "comment": "When assigned" }
+      ]
+    },
+    {
+      "name": "role_permissions",
+      "comment": "Which permissions each role has",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "role_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to roles" },
+        { "name": "permission_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to permissions" }
+      ]
+    },
+    {
+      "name": "customers",
+      "comment": "Stores customer information (end users)",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "user_id", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "Optional link to internal user" },
+        { "name": "first_name", "type": "varchar(100)", "nullable": "NO", "key": "", "default": null, "extra": "", "comment": "Given name" },
+        { "name": "last_name", "type": "varchar(100)", "nullable": "NO", "key": "", "default": null, "extra": "", "comment": "Family name" },
+        { "name": "email", "type": "varchar(255)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "Customer email" },
+        { "name": "phone", "type": "varchar(30)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Phone number" },
+        { "name": "created_at", "type": "timestamp", "nullable": "NO", "key": "", "default": "CURRENT_TIMESTAMP", "extra": "", "comment": "Customer created time" }
+      ]
+    },
+    {
+      "name": "addresses",
+      "comment": "Postal addresses for customers and suppliers",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "owner_type", "type": "varchar(20)", "nullable": "NO", "key": "", "default": "customer", "extra": "", "comment": "customer|supplier|warehouse" },
+        { "name": "owner_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to customers.id or suppliers.id or warehouses.id" },
+        { "name": "line1", "type": "varchar(255)", "nullable": "NO", "key": "", "default": null, "extra": "", "comment": "Address line 1" },
+        { "name": "line2", "type": "varchar(255)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Address line 2" },
+        { "name": "city", "type": "varchar(100)", "nullable": "NO", "key": "", "default": null, "extra": "", "comment": "City" },
+        { "name": "region", "type": "varchar(100)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "State/Province" },
+        { "name": "postal_code", "type": "varchar(20)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "ZIP / Postal code" },
+        { "name": "country", "type": "varchar(100)", "nullable": "NO", "key": "", "default": "USA", "extra": "", "comment": "Country" }
+      ]
+    },
+    {
+      "name": "suppliers",
+      "comment": "Product suppliers / vendors",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "name", "type": "varchar(200)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "Supplier name" },
+        { "name": "contact_email", "type": "varchar(255)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Contact email" },
+        { "name": "phone", "type": "varchar(30)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Phone" }
+      ]
+    },
+    {
+      "name": "categories",
+      "comment": "Product categories (tree structure)",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "name", "type": "varchar(120)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "Category name" },
+        { "name": "parent_id", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "Self-referencing FK to categories.id" },
+        { "name": "slug", "type": "varchar(150)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "URL slug" }
+      ]
+    },
+    {
+      "name": "products",
+      "comment": "Master product records",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "sku", "type": "varchar(100)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "Global SKU" },
+        { "name": "name", "type": "varchar(255)", "nullable": "NO", "key": "", "default": null, "extra": "", "comment": "Product name" },
+        { "name": "short_description", "type": "varchar(512)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Short desc" },
+        { "name": "category_id", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "FK to categories" },
+        { "name": "default_price", "type": "decimal(12,2)", "nullable": "NO", "key": "", "default": "0.00", "extra": "", "comment": "Base price" },
+        { "name": "is_active", "type": "tinyint(1)", "nullable": "NO", "key": "", "default": "1", "extra": "", "comment": "Active flag" }
+      ]
+    },
+    {
+      "name": "product_variants",
+      "comment": "Specific SKU variants (size/color)",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "product_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to products" },
+        { "name": "sku", "type": "varchar(120)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "Variant SKU" },
+        { "name": "attributes", "type": "json", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "JSON blob (color,size,...)" },
+        { "name": "price_override", "type": "decimal(12,2)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Optional price override" },
+        { "name": "created_at", "type": "timestamp", "nullable": "NO", "key": "", "default": "CURRENT_TIMESTAMP", "extra": "", "comment": "Variant created time" }
+      ]
+    },
+    {
+      "name": "product_images",
+      "comment": "Images for products / variants",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "product_id", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "FK to products" },
+        { "name": "variant_id", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "FK to product_variants" },
+        { "name": "url", "type": "varchar(1024)", "nullable": "NO", "key": "", "default": null, "extra": "", "comment": "Image URL" },
+        { "name": "alt_text", "type": "varchar(255)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Alt/description" },
+        { "name": "position", "type": "int(11)", "nullable": "NO", "key": "", "default": "0", "extra": "", "comment": "Ordering" }
+      ]
+    },
+    {
+      "name": "product_tags",
+      "comment": "Join table products ⇄ tags",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "product_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK products.id" },
+        { "name": "tag_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK tags.id" }
+      ]
+    },
+    {
+      "name": "tags",
+      "comment": "Arbitrary tags for products",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "label", "type": "varchar(100)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "Tag label" }
+      ]
+    },
+    {
+      "name": "orders",
+      "comment": "Customer orders (sales)",
+      "columns": [
+        { "name": "id", "type": "bigint(20)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "Order PK" },
+        { "name": "order_number", "type": "varchar(60)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "Human-friendly order number" },
+        { "name": "customer_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to customers" },
+        { "name": "placed_at", "type": "datetime", "nullable": "NO", "key": "", "default": "CURRENT_TIMESTAMP", "extra": "", "comment": "Placement time" },
+        { "name": "status", "type": "varchar(40)", "nullable": "NO", "key": "", "default": "pending", "extra": "", "comment": "Order status" },
+        { "name": "shipping_address_id", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "FK to addresses" },
+        { "name": "billing_address_id", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "FK to addresses" },
+        { "name": "total_amount", "type": "decimal(14,2)", "nullable": "NO", "key": "", "default": "0.00", "extra": "", "comment": "Total charged amount" }
+      ]
+    },
+    {
+      "name": "order_items",
+      "comment": "Items in each order",
+      "columns": [
+        { "name": "id", "type": "bigint(20)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "order_id", "type": "bigint(20)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to orders" },
+        { "name": "product_variant_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to product_variants" },
+        { "name": "quantity", "type": "int(11)", "nullable": "NO", "key": "", "default": "1", "extra": "", "comment": "Qty ordered" },
+        { "name": "unit_price", "type": "decimal(12,2)", "nullable": "NO", "key": "", "default": null, "extra": "", "comment": "Price per unit" },
+        { "name": "line_total", "type": "decimal(14,2)", "nullable": "NO", "key": "", "default": "0.00", "extra": "", "comment": "quantity * unit_price" }
+      ]
+    },
+    {
+      "name": "warehouses",
+      "comment": "Physical storage locations",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "code", "type": "varchar(50)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "Warehouse code" },
+        { "name": "name", "type": "varchar(200)", "nullable": "NO", "key": "", "default": null, "extra": "", "comment": "Warehouse name" },
+        { "name": "address_id", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "FK to addresses" }
+      ]
+    },
+    {
+      "name": "inventory",
+      "comment": "Current stock per variant per warehouse",
+      "columns": [
+        { "name": "id", "type": "bigint(20)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "warehouse_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to warehouses" },
+        { "name": "product_variant_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to product_variants" },
+        { "name": "on_hand", "type": "int(11)", "nullable": "NO", "key": "", "default": "0", "extra": "", "comment": "Available quantity" },
+        { "name": "reserved", "type": "int(11)", "nullable": "NO", "key": "", "default": "0", "extra": "", "comment": "Reserved for orders" },
+        { "name": "reorder_point", "type": "int(11)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Trigger point for replenish" }
+      ]
+    },
+    {
+      "name": "stock_movements",
+      "comment": "Inbound/outbound inventory events",
+      "columns": [
+        { "name": "id", "type": "bigint(20)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "inventory_id", "type": "bigint(20)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to inventory" },
+        { "name": "change", "type": "int(11)", "nullable": "NO", "key": "", "default": null, "extra": "", "comment": "Positive = add, negative = remove" },
+        { "name": "reason", "type": "varchar(120)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Reason (sale, return, adjust)" },
+        { "name": "related_document", "type": "varchar(120)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Optional ref (order# / PO#)" },
+        { "name": "performed_by", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "User who performed change" },
+        { "name": "performed_at", "type": "datetime", "nullable": "NO", "key": "", "default": "CURRENT_TIMESTAMP", "extra": "", "comment": "When movement happened" }
+      ]
+    },
+    {
+      "name": "purchase_orders",
+      "comment": "POs to suppliers (inbound stock)",
+      "columns": [
+        { "name": "id", "type": "bigint(20)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "po_number", "type": "varchar(80)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "PO reference" },
+        { "name": "supplier_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to suppliers" },
+        { "name": "warehouse_id", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "Delivery warehouse" },
+        { "name": "status", "type": "varchar(40)", "nullable": "NO", "key": "", "default": "open", "extra": "", "comment": "PO status" },
+        { "name": "total_value", "type": "decimal(14,2)", "nullable": "NO", "key": "", "default": "0.00", "extra": "", "comment": "Estimated total" }
+      ]
+    },
+    {
+      "name": "purchase_items",
+      "comment": "Items on purchase orders",
+      "columns": [
+        { "name": "id", "type": "bigint(20)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "purchase_order_id", "type": "bigint(20)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to purchase_orders" },
+        { "name": "product_variant_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "Variant being purchased" },
+        { "name": "qty_ordered", "type": "int(11)", "nullable": "NO", "key": "", "default": "0", "extra": "", "comment": "Qty requested" },
+        { "name": "unit_cost", "type": "decimal(12,2)", "nullable": "NO", "key": "", "default": "0.00", "extra": "", "comment": "Cost per unit" }
+      ]
+    },
+    {
+      "name": "invoices",
+      "comment": "Customer invoices",
+      "columns": [
+        { "name": "id", "type": "bigint(20)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "invoice_number", "type": "varchar(80)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "Invoice ref" },
+        { "name": "order_id", "type": "bigint(20)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "Linked order" },
+        { "name": "issued_at", "type": "datetime", "nullable": "NO", "key": "", "default": "CURRENT_TIMESTAMP", "extra": "", "comment": "Issue time" },
+        { "name": "due_at", "type": "datetime", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Due date" },
+        { "name": "total_amount", "type": "decimal(14,2)", "nullable": "NO", "key": "", "default": "0.00", "extra": "", "comment": "Invoice total" }
+      ]
+    },
+    {
+      "name": "payments",
+      "comment": "Payments against invoices or orders",
+      "columns": [
+        { "name": "id", "type": "bigint(20)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "invoice_id", "type": "bigint(20)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "Linked invoice" },
+        { "name": "order_id", "type": "bigint(20)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "Linked order (optional)" },
+        { "name": "amount", "type": "decimal(14,2)", "nullable": "NO", "key": "", "default": "0.00", "extra": "", "comment": "Amount paid" },
+        { "name": "method", "type": "varchar(50)", "nullable": "NO", "key": "", "default": "card", "extra": "", "comment": "Payment method" },
+        { "name": "paid_at", "type": "datetime", "nullable": "NO", "key": "", "default": "CURRENT_TIMESTAMP", "extra": "", "comment": "When payment recorded" }
+      ]
+    },
+    {
+      "name": "returns",
+      "comment": "Customer returns / RMAs",
+      "columns": [
+        { "name": "id", "type": "bigint(20)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "order_id", "type": "bigint(20)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "Original order" },
+        { "name": "requested_at", "type": "datetime", "nullable": "NO", "key": "", "default": "CURRENT_TIMESTAMP", "extra": "", "comment": "Request time" },
+        { "name": "status", "type": "varchar(40)", "nullable": "NO", "key": "", "default": "requested", "extra": "", "comment": "Return status" }
+      ]
+    },
+    {
+      "name": "return_items",
+      "comment": "Items returned (linked to order_items)",
+      "columns": [
+        { "name": "id", "type": "bigint(20)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "return_id", "type": "bigint(20)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to returns" },
+        { "name": "order_item_id", "type": "bigint(20)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to order_items" },
+        { "name": "qty", "type": "int(11)", "nullable": "NO", "key": "", "default": "1", "extra": "", "comment": "Qty returned" }
+      ]
+    },
+    {
+      "name": "reviews",
+      "comment": "Customer product reviews",
+      "columns": [
+        { "name": "id", "type": "bigint(20)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "customer_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK customers.id" },
+        { "name": "product_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK products.id" },
+        { "name": "rating", "type": "tinyint(2)", "nullable": "NO", "key": "", "default": "5", "extra": "", "comment": "1..5 rating" },
+        { "name": "title", "type": "varchar(200)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Review title" },
+        { "name": "body", "type": "text", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Review body" },
+        { "name": "created_at", "type": "datetime", "nullable": "NO", "key": "", "default": "CURRENT_TIMESTAMP", "extra": "", "comment": "When written" }
+      ]
+    },
+    {
+      "name": "review_votes",
+      "comment": "Up/down votes on reviews",
+      "columns": [
+        { "name": "id", "type": "bigint(20)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "review_id", "type": "bigint(20)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to reviews" },
+        { "name": "user_id", "type": "int(11)", "nullable": "NO", "key": "MUL", "default": null, "extra": "", "comment": "FK to users (who voted)" },
+        { "name": "vote", "type": "tinyint(1)", "nullable": "NO", "key": "", "default": "1", "extra": "", "comment": "1 up, -1 down" }
+      ]
+    },
+    {
+      "name": "coupons",
+      "comment": "Discount coupons",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "code", "type": "varchar(60)", "nullable": "NO", "key": "UNI", "default": null, "extra": "", "comment": "Coupon code" },
+        { "name": "discount_pct", "type": "decimal(5,2)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Percent discount" },
+        { "name": "applies_to_product_id", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "Optional product-specific coupon" },
+        { "name": "valid_from", "type": "datetime", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Start" },
+        { "name": "valid_until", "type": "datetime", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "End" }
+      ]
+    },
+    {
+      "name": "promotions",
+      "comment": "Marketing promotions linking coupons & rules",
+      "columns": [
+        { "name": "id", "type": "int(11)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "name", "type": "varchar(200)", "nullable": "NO", "key": "", "default": null, "extra": "", "comment": "Promotion name" },
+        { "name": "coupon_id", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "Linked coupon" },
+        { "name": "active", "type": "tinyint(1)", "nullable": "NO", "key": "", "default": "0", "extra": "", "comment": "Active flag" }
+      ]
+    },
+    {
+      "name": "sessions",
+      "comment": "Login sessions / tokens",
+      "columns": [
+        { "name": "id", "type": "char(36)", "nullable": "NO", "key": "PRI", "default": null, "extra": "", "comment": "UUID session id" },
+        { "name": "user_id", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "FK to users" },
+        { "name": "created_at", "type": "datetime", "nullable": "NO", "key": "", "default": "CURRENT_TIMESTAMP", "extra": "", "comment": "Creation time" },
+        { "name": "expires_at", "type": "datetime", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Expiry" },
+        { "name": "ip_address", "type": "varchar(45)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Origin IP" }
+      ]
+    },
+    {
+      "name": "audit_logs",
+      "comment": "WORM-style audit trail for critical changes",
+      "columns": [
+        { "name": "id", "type": "bigint(20)", "nullable": "NO", "key": "PRI", "default": null, "extra": "auto_increment", "comment": "PK" },
+        { "name": "actor_id", "type": "int(11)", "nullable": "YES", "key": "MUL", "default": null, "extra": "", "comment": "User who performed action" },
+        { "name": "action", "type": "varchar(120)", "nullable": "NO", "key": "", "default": null, "extra": "", "comment": "Action name" },
+        { "name": "object_type", "type": "varchar(80)", "nullable": "NO", "key": "", "default": null, "extra": "", "comment": "Table/object affected" },
+        { "name": "object_id", "type": "varchar(120)", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "PK value of object" },
+        { "name": "metadata", "type": "json", "nullable": "YES", "key": "", "default": null, "extra": "", "comment": "Old/new values" },
+        { "name": "created_at", "type": "datetime", "nullable": "NO", "key": "", "default": "CURRENT_TIMESTAMP", "extra": "", "comment": "When logged" }
+      ]
+    }
+  ],
+  "relationships": [
+    { "from": "user_profiles", "to": "users", "fromColumn": "user_id", "toColumn": "id", "type": "one-to-one" },
+    { "from": "user_roles", "to": "users", "fromColumn": "user_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "user_roles", "to": "roles", "fromColumn": "role_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "role_permissions", "to": "roles", "fromColumn": "role_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "role_permissions", "to": "permissions", "fromColumn": "permission_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "customers", "to": "users", "fromColumn": "user_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "addresses", "to": "customers", "fromColumn": "owner_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "addresses", "to": "suppliers", "fromColumn": "owner_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "addresses", "to": "warehouses", "fromColumn": "owner_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "products", "to": "categories", "fromColumn": "category_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "product_variants", "to": "products", "fromColumn": "product_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "product_images", "to": "products", "fromColumn": "product_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "product_images", "to": "product_variants", "fromColumn": "variant_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "product_tags", "to": "products", "fromColumn": "product_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "product_tags", "to": "tags", "fromColumn": "tag_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "orders", "to": "customers", "fromColumn": "customer_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "orders", "to": "addresses", "fromColumn": "shipping_address_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "orders", "to": "addresses", "fromColumn": "billing_address_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "order_items", "to": "orders", "fromColumn": "order_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "order_items", "to": "product_variants", "fromColumn": "product_variant_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "inventory", "to": "warehouses", "fromColumn": "warehouse_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "inventory", "to": "product_variants", "fromColumn": "product_variant_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "stock_movements", "to": "inventory", "fromColumn": "inventory_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "stock_movements", "to": "users", "fromColumn": "performed_by", "toColumn": "id", "type": "many-to-one" },
+    { "from": "purchase_orders", "to": "suppliers", "fromColumn": "supplier_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "purchase_orders", "to": "warehouses", "fromColumn": "warehouse_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "purchase_items", "to": "purchase_orders", "fromColumn": "purchase_order_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "purchase_items", "to": "product_variants", "fromColumn": "product_variant_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "invoices", "to": "orders", "fromColumn": "order_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "payments", "to": "invoices", "fromColumn": "invoice_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "payments", "to": "orders", "fromColumn": "order_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "returns", "to": "orders", "fromColumn": "order_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "return_items", "to": "returns", "fromColumn": "return_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "return_items", "to": "order_items", "fromColumn": "order_item_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "reviews", "to": "customers", "fromColumn": "customer_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "reviews", "to": "products", "fromColumn": "product_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "review_votes", "to": "reviews", "fromColumn": "review_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "review_votes", "to": "users", "fromColumn": "user_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "coupons", "to": "products", "fromColumn": "applies_to_product_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "promotions", "to": "coupons", "fromColumn": "coupon_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "sessions", "to": "users", "fromColumn": "user_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "audit_logs", "to": "users", "fromColumn": "actor_id", "toColumn": "id", "type": "many-to-one" },
+    { "from": "categories", "to": "categories", "fromColumn": "parent_id", "toColumn": "id", "type": "many-to-one" }
+  ]
+}

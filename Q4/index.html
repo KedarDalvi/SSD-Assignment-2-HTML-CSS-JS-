@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Set character encoding for the document -->
+    <meta charset="UTF-8">
+    <!-- Ensure proper rendering and touch zooming on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title that appears in browser tab -->
+    <title>Stoplight Game - Nash Equilibrium</title>
+    <!-- Link to external CSS stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Main container for the entire game -->
+    <div class="container">
+        <!-- Header section with title and description -->
+        <div class="header">
+            <h1>🚦 Stoplight Game</h1>
+            <p>A Nash Equilibrium Demonstration</p>
+        </div>
+
+        <!-- Score display section -->
+        <div class="score-board">
+            <!-- Player score display -->
+            <div class="score-item">
+                <p class="score-label">You</p>
+                <p class="score-value" id="playerScore">0</p>
+            </div>
+            <!-- Trophy icon separator -->
+            <div class="trophy">🏆</div>
+            <!-- Computer score display -->
+            <div class="score-item">
+                <p class="score-label">Computer</p>
+                <p class="score-value" id="computerScore">0</p>
+            </div>
+        </div>
+
+        <!-- Main game area -->
+        <div class="game-area">
+            <!-- Message display (instruction or result) -->
+            <p class="message" id="message">You're at an intersection. Choose your move:</p>
+            
+            <!-- Result display section (hidden initially) -->
+            <div class="result-display" id="resultDisplay" style="display: none;">
+                <p class="result-text" id="resultText"></p>
+            </div>
+
+            <!-- Choice display section (hidden initially) -->
+            <div class="choices-display" id="choicesDisplay" style="display: none;">
+                <!-- Player's choice display -->
+                <div class="choice-box">
+                    <p class="choice-label">Your Choice</p>
+                    <div class="choice-icon" id="playerChoiceIcon"></div>
+                </div>
+                <!-- VS separator -->
+                <div class="vs-text">VS</div>
+                <!-- Computer's choice display -->
+                <div class="choice-box">
+                    <p class="choice-label">Computer's Choice</p>
+                    <div class="choice-icon" id="computerChoiceIcon"></div>
+                </div>
+            </div>
+
+            <!-- Action buttons section -->
+            <div class="buttons" id="actionButtons">
+                <!-- Button for STOP choice -->
+                <button class="btn btn-stop" onclick="playGame('stop')">
+                    <span class="btn-icon">🛑</span>
+                    <span>STOP</span>
+                </button>
+                <!-- Button for GO choice -->
+                <button class="btn btn-go" onclick="playGame('go')">
+                    <span class="btn-icon">🚗</span>
+                    <span>GO</span>
+                </button>
+            </div>
+
+            <!-- Reset buttons (hidden initially) -->
+            <div class="reset-buttons" id="resetButtons" style="display: none;">
+                <!-- Button to play another round -->
+                <button class="btn btn-reset" onclick="resetRound()">
+                    Play Again
+                </button>
+                <!-- Button to reset entire game -->
+                <button class="btn btn-reset-all" onclick="resetGame()">
+                    Reset Game
+                </button>
+            </div>
+        </div>
+
+        <!-- Game explanation section -->
+        <div class="explanation">
+            <h3>📊 Payoff Matrix</h3>
+            <table class="payoff-table">
+                <tr>
+                    <th></th>
+                    <th>Computer: STOP</th>
+                    <th>Computer: GO</th>
+                </tr>x
+                <tr>
+                    <th>You: STOP</th>
+                    <td>(-1, -1)</td>
+                    <td>(0, +1)</td>
+                </tr>
+                <tr>
+                    <th>You: GO</th>
+                    <td>(+1, -1)</td>
+                    <td class="nash">(-5, -5) ⚠️</td>
+                </tr>
+            </table>
+            <p class="explanation-text">
+                <strong>Nash Equilibrium:</strong> When both players choose GO, resulting in a crash (-5, -5).
+                Neither player can improve their outcome by unilaterally changing their strategy.
+            </p>
+        </div>
+    </div>
+
+    <!-- Link to external JavaScript file -->
+    <script src="script.js"></script>
+    <script src="../Q6/tracker.js"></script>
+    <script src="../Q6/tracker.js"></script>
+
+<!-- Add this test script -->
+<script>
+    console.log("%c=== TRACKER DEBUG ===", "color: red; font-size: 20px; font-weight: bold");
+    console.log("1. EventTracker class exists?", typeof EventTracker);
+    console.log("2. eventTracker object exists?", typeof eventTracker);
+    console.log("3. eventTracker object:", eventTracker);
+    
+    if (eventTracker) {
+        console.log("4. Number of events captured:", eventTracker.events.length);
+        console.log("5. Events:", eventTracker.events);
+    } else {
+        console.error("❌ Tracker NOT initialized!");
+    }
+</script>
+</body>
+</html>

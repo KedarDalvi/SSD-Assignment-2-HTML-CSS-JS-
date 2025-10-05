@@ -1,0 +1,484 @@
+/* Reset default browser margins and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling with modern gradient background */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    min-height: 100vh;
+}
+
+/* Main container for the entire application */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+/* Header section styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+/* Main title styling */
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Subtitle styling */
+.header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Tab navigation container */
+.tabs {
+    display: flex;
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* Individual tab button styling */
+.tab {
+    flex: 1;
+    padding: 1rem;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #6c757d;
+}
+
+/* Hover effect for tabs */
+.tab:hover {
+    background: #e9ecef;
+}
+
+/* Active tab styling */
+.tab.active {
+    background: white;
+    color: #667eea;
+    border-bottom: 3px solid #667eea;
+}
+
+/* Tab content container */
+.tab-content {
+    display: none;
+    padding: 2rem;
+}
+
+/* Active tab content display */
+.tab-content.active {
+    display: block;
+}
+
+/* Instructions section styling */
+.instructions {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 0.5rem;
+}
+
+/* Instructions heading */
+.instructions h3 {
+    color: #1976d2;
+    margin-bottom: 1rem;
+}
+
+/* Instructions paragraphs */
+.instructions p {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+/* Code blocks within instructions */
+.instructions code {
+    background: #fff;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    font-family: 'Courier New', monospace;
+    color: #d32f2f;
+}
+
+/* Pre-formatted code blocks */
+.instructions pre {
+    background: #263238;
+    color: #aed581;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+/* Unordered list styling in instructions */
+.instructions ul {
+    margin-left: 2rem;
+    margin-top: 0.5rem;
+}
+
+/* List item spacing */
+.instructions li {
+    margin-bottom: 0.5rem;
+}
+
+/* Form group container */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Form label styling */
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+/* File upload container */
+.file-upload-container {
+    position: relative;
+    width: 100%;
+}
+
+/* Hide default file input */
+.file-upload-container input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 2;
+}
+
+/* Custom file upload label */
+.file-upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+    border: 3px dashed #667eea;
+    border-radius: 0.5rem;
+    background: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* File upload hover effect */
+.file-upload-label:hover {
+    background: #e8eaf6;
+    border-color: #764ba2;
+}
+
+/* Upload icon styling */
+.upload-icon {
+    font-size: 2rem;
+}
+
+/* File name display */
+#fileName {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+/* File selected state */
+.file-upload-label.file-selected {
+    border-color: #28a745;
+    background: #d4edda;
+}
+
+.file-upload-label.file-selected #fileName {
+    color: #155724;
+    font-weight: 600;
+}
+
+/* OR divider */
+.or-divider {
+    text-align: center;
+    margin: 2rem 0;
+    position: relative;
+}
+
+.or-divider::before,
+.or-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background: #dee2e6;
+}
+
+.or-divider::before {
+    left: 0;
+}
+
+.or-divider::after {
+    right: 0;
+}
+
+.or-divider span {
+    background: white;
+    padding: 0 1rem;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+/* Textarea input styling */
+.form-group textarea {
+    width: 100%;
+    min-height: 300px;
+    padding: 1rem;
+    border: 2px solid #dee2e6;
+    border-radius: 0.5rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    resize: vertical;
+}
+
+/* Textarea focus effect */
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* Button container for centering */
+.button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Base button styling */
+.btn {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Primary button styling */
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+/* Primary button hover effect */
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Secondary button styling */
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+/* Secondary button hover effect */
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Success button styling */
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+/* Success button hover effect */
+.btn-success:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Output section container */
+.output-section {
+    margin-top: 2rem;
+}
+
+/* Output section heading */
+.output-section h3 {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+/* Table container with scroll */
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Table header and cell styling */
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Table header specific styling */
+th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Table row hover effect */
+tr:hover {
+    background: #f8f9fa;
+}
+
+/* SVG diagram container with improved styling */
+#diagramContainer {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8eaf6 100%);
+    border: 2px solid #dee2e6;
+    border-radius: 0.75rem;
+    padding: 2rem;
+    overflow: auto;
+    min-height: 600px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* SVG container for better centering */
+#diagramContainer svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Error message styling */
+.error {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+}
+
+/* Success message styling */
+.success {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+}
+
+/* Sample data section */
+.sample-data {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 0.5rem;
+}
+
+/* Sample data heading */
+.sample-data h4 {
+    color: #856404;
+    margin-bottom: 1rem;
+}
+
+/* Printable area for PDF generation */
+.printable {
+    display: none;
+}
+
+/* Print media query for PDF generation */
+@media print {
+    /* Remove background for print */
+    body {
+        background: white;
+        padding: 0;
+    }
+    
+    /* Remove shadows for print */
+    .container {
+        box-shadow: none;
+    }
+    
+    /* Hide UI elements when printing */
+    .header, .tabs, .button-group, .instructions, .sample-data {
+        display: none;
+    }
+    
+    /* Show printable elements */
+    .printable {
+        display: block;
+    }
+    
+    /* Display all tab content when printing */
+    .tab-content {
+        display: block !important;
+    }
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    /* Reduce padding on mobile */
+    body {
+        padding: 0.5rem;
+    }
+    
+    /* Smaller header on mobile */
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    /* Stack tabs vertically on mobile */
+    .tabs {
+        flex-direction: column;
+    }
+    
+    /* Reduce padding in tab content */
+    .tab-content {
+        padding: 1rem;
+    }
+    
+    /* Stack buttons vertically on mobile */
+    .button-group {
+        flex-direction: column;
+    }
+    
+    /* Make buttons full width on mobile */
+    .btn {
+        width: 100%;
+    }
+}

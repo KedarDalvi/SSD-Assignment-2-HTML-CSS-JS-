@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Set character encoding for proper text display -->
+    <meta charset="UTF-8">
+    <!-- Ensure responsive design on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Page title shown in browser tab -->
+    <title>Database Data Dictionary Generator</title>
+    <!-- Link to external CSS stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Main container for the entire application -->
+    <div class="container">
+        <!-- Header section -->
+        <div class="header">
+            <h1>📊 Database Data Dictionary Generator</h1>
+            <p>Generate professional data dictionaries and ER diagrams from your database schema</p>
+        </div>
+
+        <!-- Tab navigation -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('instructions')">📖 Instructions</button>
+            <button class="tab" onclick="switchTab('input')">📝 Input Schema</button>
+            <button class="tab" onclick="switchTab('dictionary')">📋 Data Dictionary</button>
+            <button class="tab" onclick="switchTab('diagram')">🔗 ER Diagram</button>
+        </div>
+
+        <!-- Instructions Tab -->
+        <div id="instructions" class="tab-content active">
+            <div class="instructions">
+                <h3>🎯 How to Use This Tool</h3>
+                <p>This tool generates a comprehensive data dictionary and Entity-Relationship diagram from your database schema. Follow these steps:</p>
+                
+                <h4 style="margin-top: 1.5rem; color: #1976d2;">Step 1: Extract Your Database Schema</h4>
+                <p><strong>For MySQL/MariaDB:</strong></p>
+                <pre>
+-- Export schema for a specific database
+SELECT 
+    JSON_OBJECT(
+        'tables', JSON_ARRAYAGG(
+            JSON_OBJECT(
+                'name', TABLE_NAME,
+                'columns', (
+                    SELECT JSON_ARRAYAGG(
+                        JSON_OBJECT(
+                            'name', COLUMN_NAME,
+                            'type', COLUMN_TYPE,
+                            'nullable', IS_NULLABLE,
+                            'key', COLUMN_KEY,
+                            'default', COLUMN_DEFAULT,
+                            'extra', EXTRA,
+                            'comment', COLUMN_COMMENT
+                        )
+                    )
+                    FROM INFORMATION_SCHEMA.COLUMNS c
+                    WHERE c.TABLE_SCHEMA = t.TABLE_SCHEMA
+                    AND c.TABLE_NAME = t.TABLE_NAME
+                ),
+                'comment', TABLE_COMMENT
+            )
+        )
+    ) as schema_json
+FROM INFORMATION_SCHEMA.TABLES t
+WHERE TABLE_SCHEMA = 'your_database_name'
+AND TABLE_TYPE = 'BASE TABLE';</pre>
+
+                <p><strong>For PostgreSQL:</strong></p>
+                <pre>
+-- Export schema as JSON
+SELECT json_build_object(
+    'tables', json_agg(
+        json_build_object(
+            'name', tablename,
+            'columns', (
+                SELECT json_agg(
+                    json_build_object(
+                        'name', column_name,
+                        'type', data_type,
+                        'nullable', is_nullable,
+                        'default', column_default
+                    )
+                )
+                FROM information_schema.columns
+                WHERE table_name = t.tablename
+            )
+        )
+    )
+) as schema_json
+FROM pg_tables t
+WHERE schemaname = 'public';</pre>
+
+                <p><strong>For SQL Server:</strong></p>
+                <pre>
+-- Use this query to generate JSON schema
+SELECT 
+    (SELECT 
+        t.name AS 'name',
+        (SELECT 
+            c.name AS 'name',
+            ty.name AS 'type',
+            CASE WHEN c.is_nullable = 1 THEN 'YES' ELSE 'NO' END AS 'nullable',
+            CASE WHEN ic.column_id IS NOT NULL THEN 'PRI' ELSE '' END AS 'key'
+        FROM sys.columns c
+        INNER JOIN sys.types ty ON c.user_type_id = ty.user_type_id
+        LEFT JOIN sys.index_columns ic ON ic.object_id = c.object_id AND ic.column_id = c.column_id
+        WHERE c.object_id = t.object_id
+        FOR JSON PATH) AS 'columns'
+    FROM sys.tables t
+    FOR JSON PATH) AS schema_json;</pre>
+
+                <h4 style="margin-top: 1.5rem; color: #1976d2;">Step 2: Define Relationships</h4>
+                <p>Add relationship information to your JSON. Use this format:</p>
+                <pre>
+{
+    "tables": [...your tables...],
+    "relationships": [
+        {
+            "from": "orders",
+            "to": "customers",
+            "fromColumn": "customer_id",
+            "toColumn": "id",
+            "type": "many-to-one"
+        }
+    ]
+}</pre>
+
+                <h4 style="margin-top: 1.5rem; color: #1976d2;">Step 3: Generate Your Documentation</h4>
+                <ul>
+                    <li>Paste your JSON schema into the "Input Schema" tab</li>
+                    <li>Click "Generate Data Dictionary"</li>
+                    <li>View the Data Dictionary and ER Diagram in their respective tabs</li>
+                    <li>Export as HTML or PDF using the export buttons</li>
+                </ul>
+
+                <h4 style="margin-top: 1.5rem; color: #1976d2;">Supported File Formats</h4>
+                <p><strong>JSON Format:</strong></p>
+                <pre>
+{
+    "tables": [
+        {
+            "name": "table_name",
+            "comment": "Optional table description",
+            "columns": [
+                {
+                    "name": "column_name",
+                    "type": "varchar(255)",
+                    "nullable": "NO",
+                    "key": "PRI",
+                    "default": null,
+                    "extra": "auto_increment",
+                    "comment": "Optional column description"
+                }
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "from": "child_table",
+            "to": "parent_table",
+            "fromColumn": "foreign_key_column",
+            "toColumn": "referenced_column",
+            "type": "many-to-one"
+        }
+    ]
+}</pre>
+
+                <p><strong>XML Format:</strong></p>
+                <pre>
+&lt;database&gt;
+    &lt;table name="users" comment="User information"&gt;
+        &lt;column name="id" type="int(11)" nullable="NO" key="PRI" 
+                extra="auto_increment" comment="Primary key"/&gt;
+        &lt;column name="username" type="varchar(100)" nullable="NO" 
+                key="" comment="Username"/&gt;
+    &lt;/table&gt;
+    
+    &lt;relationship from="orders" to="users" 
+                  fromColumn="user_id" toColumn="id" 
+                  type="many-to-one"/&gt;
+&lt;/database&gt;</pre>
+            </div>
+
+            <!-- Sample Data Button -->
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="loadSampleData()">📂 Load Sample Database Schema</button>
+                <button class="btn btn-secondary" onclick="downloadSampleXML()">💾 Download Sample XML</button>
+            </div>
+        </div>
+
+        <!-- Input Tab -->
+        <div id="input" class="tab-content">
+            <div class="sample-data">
+                <h4>💡 Quick Start</h4>
+                <p>Upload a JSON/XML file with your database schema, paste it directly, or load a sample to get started.</p>
+            </div>
+
+            <!-- File Upload Section -->
+            <div class="form-group">
+                <label for="fileUpload">📁 Upload Schema File (JSON/XML):</label>
+                <div class="file-upload-container">
+                    <input type="file" id="fileUpload" accept=".json,.xml,.txt" onchange="handleFileUpload(event)">
+                    <label for="fileUpload" class="file-upload-label">
+                        <span class="upload-icon">📤</span>
+                        <span id="fileName">Choose a file or drag and drop here</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- OR Divider -->
+            <div class="or-divider">
+                <span>OR</span>
+            </div>
+
+            <div class="form-group">
+                <label for="schemaInput">✍️ Paste Database Schema (JSON/XML Format):</label>
+                <textarea id="schemaInput" placeholder="Paste your database schema JSON or XML here..."></textarea>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="generateDictionary()">🚀 Generate Data Dictionary</button>
+                <button class="btn btn-secondary" onclick="clearInput()">🗑️ Clear Input</button>
+                <button class="btn btn-secondary" onclick="loadSampleData()">📂 Load Sample Data</button>
+            </div>
+
+            <!-- Error message container -->
+            <div id="errorContainer"></div>
+        </div>
+
+        <!-- Data Dictionary Tab -->
+        <div id="dictionary" class="tab-content">
+            <!-- Dictionary output will be populated by JavaScript -->
+            <div id="dictionaryOutput">
+                <p style="text-align: center; color: #6c757d; padding: 2rem;">Generate a data dictionary to see the output here.</p>
+            </div>
+            
+            <!-- Export buttons (hidden initially) -->
+            <div class="button-group" id="dictionaryButtons" style="display: none;">
+                <button class="btn btn-success" onclick="exportAsHTML()">💾 Export as HTML</button>
+                <button class="btn btn-success" onclick="exportAsPDF()">📄 Export as PDF</button>
+            </div>
+        </div>
+
+        <!-- ER Diagram Tab -->
+        <div id="diagram" class="tab-content">
+            <!-- SVG diagram will be populated by JavaScript -->
+            <div id="diagramContainer">
+                <p style="text-align: center; color: #6c757d; padding: 2rem;">Generate a data dictionary to see the ER diagram here.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link to external JavaScript file -->
+    <script src="script.js"></script>
+    <script src="../Q6/tracker.js"></script>
+</body>
+</html
