@@ -1,72 +1,46 @@
-/**
- * Universal Event Tracker
- * Captures all click events and page views with detailed logging
- * Works with any HTML page including Q1-Q5 implementations
- */
 
 // Class to manage event tracking
 class EventTracker {
     constructor() {
-        // Initialize event storage array
         this.events = [];
-        // Track if page view has been logged
         this.pageViewLogged = false;
-        // Initialize the tracker
         this.init();
     }
 
-    /**
-     * Initialize all event listeners
-     */
+    //Initialize all event listeners
     init() {
-        // Log page view when page loads
         this.logPageView();
         
-        // Track all click events on the document
         this.trackClicks();
         
-        // Track all input changes
         this.trackInputChanges();
         
-        // Track form submissions
         this.trackFormSubmissions();
         
-        // Track scroll events
         this.trackScrollEvents();
         
-        // Track hover events on important elements
         this.trackHoverEvents();
         
-        // Track visibility changes (tab switching)
         this.trackVisibilityChanges();
         
-        // Log summary on page unload
         this.trackPageUnload();
     }
 
-    /**
-     * Generate timestamp in readable format
-     */
+    //Generate timestamp in readable format
     getTimestamp() {
         const now = new Date();
         return now.toISOString();
     }
 
-    /**
-     * Get detailed element information
-     */
+    //Get detailed element information
     getElementInfo(element) {
-        // Get element type
         const tagName = element.tagName.toLowerCase();
         
-        // Get element identifiers
         const id = element.id || 'no-id';
         const className = element.className || 'no-class';
         
-        // Get element text content (truncated)
         const text = element.textContent.trim().substring(0, 50) || 'no-text';
         
-        // Determine element type/role
         let elementType = tagName;
         
         if (element.type) {
@@ -91,10 +65,8 @@ class EventTracker {
             elementType = 'tab';
         }
         
-        // Get CSS classes applied
         const cssClasses = className ? className.split(' ').filter(c => c) : [];
         
-        // Get computed styles for important properties
         const computedStyle = window.getComputedStyle(element);
         const cssProperties = {
             backgroundColor: computedStyle.backgroundColor,
@@ -117,11 +89,8 @@ class EventTracker {
         };
     }
 
-    /**
-     * Log an event to console and storage
-     */
+    //Log an event to console and storage
     logEvent(eventType, element, additionalData = {}) {
-        // Create event object
         const event = {
             timestamp: this.getTimestamp(),
             type: eventType,
@@ -129,28 +98,21 @@ class EventTracker {
             ...additionalData
         };
         
-        // Store event
         this.events.push(event);
         
-        // Log to console with formatting
         this.printEvent(event);
     }
 
-    /**
-     * Print event to console with beautiful formatting
-     */
+    //Print event to console with beautiful formatting
     printEvent(event) {
         console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #667eea');
         console.log('%c🎯 EVENT CAPTURED', 'color: #667eea; font-weight: bold; font-size: 14px');
         console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #667eea');
         
-        // Timestamp
         console.log('%c⏰ Timestamp:', 'color: #f59e0b; font-weight: bold', event.timestamp);
         
-        // Event type
         console.log('%c📌 Event Type:', 'color: #10b981; font-weight: bold', event.type);
         
-        // Element information
         if (event.elementInfo) {
             console.log('%c🎨 Element Details:', 'color: #3b82f6; font-weight: bold');
             console.log('   └─ Tag:', event.elementInfo.tagName);
@@ -169,7 +131,6 @@ class EventTracker {
                 console.log('   └─ Value:', event.elementInfo.value);
             }
             
-            // CSS Properties
             console.log('%c🎨 CSS Properties:', 'color: #8b5cf6; font-weight: bold');
             console.log('   └─ Background:', event.elementInfo.cssProperties.backgroundColor);
             console.log('   └─ Color:', event.elementInfo.cssProperties.color);
@@ -177,7 +138,6 @@ class EventTracker {
             console.log('   └─ Display:', event.elementInfo.cssProperties.display);
         }
         
-        // Additional data
         if (Object.keys(event).length > 3) {
             console.log('%c📊 Additional Data:', 'color: #ec4899; font-weight: bold');
             Object.keys(event).forEach(key => {
@@ -190,9 +150,7 @@ class EventTracker {
         console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', 'color: #667eea');
     }
 
-    /**
-     * Log page view event
-     */
+    //Log page view event
     logPageView() {
         if (!this.pageViewLogged) {
             this.pageViewLogged = true;
@@ -234,15 +192,11 @@ class EventTracker {
         }
     }
 
-    /**
-     * Track all click events
-     */
+    //Track all click events
     trackClicks() {
-        // Capture all click events at document level
         document.addEventListener('click', (e) => {
             const target = e.target;
             
-            // Get click position
             const clickPosition = {
                 x: e.clientX,
                 y: e.clientY,
@@ -254,14 +208,11 @@ class EventTracker {
                 clickPosition,
                 button: e.button === 0 ? 'left' : e.button === 1 ? 'middle' : 'right'
             });
-        }, true); // Use capture phase to catch all events
+        }, true); 
     }
 
-    /**
-     * Track input changes
-     */
+    //rack input changes
     trackInputChanges() {
-        // Track input, select, textarea changes
         document.addEventListener('change', (e) => {
             const target = e.target;
             if (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA') {
@@ -272,7 +223,6 @@ class EventTracker {
             }
         }, true);
         
-        // Track file uploads
         document.addEventListener('change', (e) => {
             const target = e.target;
             if (target.type === 'file' && target.files.length > 0) {
@@ -289,14 +239,11 @@ class EventTracker {
         }, true);
     }
 
-    /**
-     * Track form submissions
-     */
+    //Track form submissions
     trackFormSubmissions() {
         document.addEventListener('submit', (e) => {
             const form = e.target;
             
-            // Get form data
             const formData = new FormData(form);
             const formFields = {};
             for (let [key, value] of formData.entries()) {
@@ -311,9 +258,7 @@ class EventTracker {
         }, true);
     }
 
-    /**
-     * Track scroll events (throttled)
-     */
+    //Track scroll events (throttled)
     trackScrollEvents() {
         let scrollTimeout;
         let lastScrollTop = 0;
@@ -333,15 +278,12 @@ class EventTracker {
                     scrollDirection,
                     scrollPercentage: Math.round(scrollPercentage) + '%'
                 });
-            }, 500); // Throttle to 500ms
+            }, 500); 
         });
     }
 
-    /**
-     * Track hover events on important elements
-     */
+    //Track hover events on important elements
     trackHoverEvents() {
-        // Track hover on buttons, links, and interactive elements
         const hoverSelectors = 'button, a, [onclick], .btn, input[type="button"], input[type="submit"]';
         
         document.addEventListener('mouseover', (e) => {
@@ -351,9 +293,7 @@ class EventTracker {
         }, true);
     }
 
-    /**
-     * Track visibility changes (tab switching)
-     */
+    //Track visibility changes (tab switching)
     trackVisibilityChanges() {
         document.addEventListener('visibilitychange', () => {
             const visibility = document.hidden ? 'hidden' : 'visible';
@@ -365,18 +305,14 @@ class EventTracker {
         });
     }
 
-    /**
-     * Track page unload and show summary
-     */
+    //Track page unload and show summary
     trackPageUnload() {
         window.addEventListener('beforeunload', () => {
             this.printSummary();
         });
     }
 
-    /**
-     * Print summary of all events
-     */
+    //Print summary of all events
     printSummary() {
         console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #ef4444; font-size: 18px');
         console.log('%c📊 EVENT TRACKING SUMMARY', 'color: #ef4444; font-weight: bold; font-size: 20px');
@@ -384,7 +320,6 @@ class EventTracker {
         
         console.log(`%c📈 Total Events Captured: ${this.events.length}`, 'color: #10b981; font-weight: bold; font-size: 16px');
         
-        // Count events by type
         const eventCounts = {};
         this.events.forEach(event => {
             eventCounts[event.type] = (eventCounts[event.type] || 0) + 1;
@@ -397,7 +332,6 @@ class EventTracker {
         
         console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #ef4444; font-size: 18px');
         
-        // Export all events as JSON
         console.log('%c💾 Full Event Log:', 'color: #8b5cf6; font-weight: bold');
         console.table(this.events.map(e => ({
             Timestamp: e.timestamp,
@@ -407,23 +341,17 @@ class EventTracker {
         })));
     }
 
-    /**
-     * Get all events (for external use)
-     */
+    //Get all events (for external use)
     getEvents() {
         return this.events;
     }
 
-    /**
-     * Export events as JSON
-     */
+    //Export events as JSON
     exportEventsAsJSON() {
         return JSON.stringify(this.events, null, 2);
     }
 
-    /**
-     * Download events as JSON file
-     */
+    //Download events as JSON file
     downloadEvents() {
         const json = this.exportEventsAsJSON();
         const blob = new Blob([json], { type: 'application/json' });
@@ -440,13 +368,10 @@ class EventTracker {
     }
 }
 
-// Initialize the event tracker immediately
 const eventTracker = new EventTracker();
 
-// Make it globally accessible for manual operations
 window.eventTracker = eventTracker;
 
-// Add helper functions to console
 console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #667eea; font-size: 16px');
 console.log('%c🚀 EVENT TRACKER INITIALIZED', 'color: #667eea; font-weight: bold; font-size: 18px');
 console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #667eea; font-size: 16px');

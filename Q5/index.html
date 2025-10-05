@@ -1,19 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Set character encoding for proper text display -->
     <meta charset="UTF-8">
-    <!-- Ensure responsive design on mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Page title shown in browser tab -->
     <title>Database Data Dictionary Generator</title>
-    <!-- Link to external CSS stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Main container for the entire application -->
     <div class="container">
-        <!-- Header section -->
         <div class="header">
             <h1>📊 Database Data Dictionary Generator</h1>
             <p>Generate professional data dictionaries and ER diagrams from your database schema</p>
@@ -182,7 +176,6 @@ SELECT
 &lt;/database&gt;</pre>
             </div>
 
-            <!-- Sample Data Button -->
             <div class="button-group">
                 <button class="btn btn-secondary" onclick="loadSampleData()">📂 Load Sample Database Schema</button>
                 <button class="btn btn-secondary" onclick="downloadSampleXML()">💾 Download Sample XML</button>
@@ -230,12 +223,10 @@ SELECT
 
         <!-- Data Dictionary Tab -->
         <div id="dictionary" class="tab-content">
-            <!-- Dictionary output will be populated by JavaScript -->
             <div id="dictionaryOutput">
                 <p style="text-align: center; color: #6c757d; padding: 2rem;">Generate a data dictionary to see the output here.</p>
             </div>
             
-            <!-- Export buttons (hidden initially) -->
             <div class="button-group" id="dictionaryButtons" style="display: none;">
                 <button class="btn btn-success" onclick="exportAsHTML()">💾 Export as HTML</button>
                 <button class="btn btn-success" onclick="exportAsPDF()">📄 Export as PDF</button>
@@ -244,7 +235,6 @@ SELECT
 
         <!-- ER Diagram Tab -->
         <div id="diagram" class="tab-content">
-            <!-- SVG diagram will be populated by JavaScript -->
             <div id="diagramContainer">
                 <p style="text-align: center; color: #6c757d; padding: 2rem;">Generate a data dictionary to see the ER diagram here.</p>
             </div>

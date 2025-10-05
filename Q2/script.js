@@ -1,5 +1,3 @@
-// script.js — behavioral scripts
-
 // Clock (updates every second)
 function startTime() {
   const today = new Date();

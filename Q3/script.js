@@ -1,7 +1,5 @@
-/* script.js - corrected version
-   Fix: ensure we create one piece per grid-cell (cols * rows),
-   so the entire image is covered. Keep requested count visible
-   and show actual pieces used separately.
+/* script.js - cleaned version
+   Comments kept only where they help navigate the code.
 */
 
 (() => {
@@ -71,7 +69,7 @@
     boardEl.style.height = boardH + 'px';
   }
 
-  // Keep grid computation unchanged (attempts to choose good cols/rows)
+  // compute grid based on requested count and board aspect ratio
   function computeGrid(n) {
     const aspect = boardW / boardH;
     let cols = Math.max(1, Math.round(Math.sqrt(n * aspect)));
@@ -80,21 +78,18 @@
     return { cols, rows };
   }
 
-  // IMPORTANT FIX:
-  // Create pieces for every grid cell (total = cols * rows),
-  // even if total != requested n. This ensures entire image is covered.
+  // create one piece per grid cell so the entire image is covered
   function createPieces(nRequested) {
     pieces = [];
     const { cols, rows } = computeGrid(nRequested);
 
-    const total = cols * rows; // actual pieces to create (fixed)
+    const total = cols * rows;
     const tileW = Math.floor(boardW / cols);
     const tileH = Math.floor(boardH / rows);
 
     let index = 0;
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
-        // create canvas with exact slice
         const pc = document.createElement('canvas');
         pc.width = tileW;
         pc.height = tileH;
@@ -118,12 +113,12 @@
       }
     }
 
-    // Update the UI counters (requested vs actual)
     reqPiecesEl.textContent = nRequested;
     actualPiecesEl.textContent = pieces.length;
     return pieces;
   }
 
+  // populate staging area with piece thumbnails
   function populateStaging() {
     stagingEl.innerHTML = '';
     ensurePiecesLayer().innerHTML = '';
@@ -142,11 +137,11 @@
       thumb.addEventListener('dblclick', () => forceSnap(p));
     });
 
-    // ensure staging visible to user (scroll/bring to view)
     stagingEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     updateInfo();
   }
 
+  // start dragging a thumbnail (creates a draggable canvas on the pieces layer)
   function startDragFromThumb(e, piece, thumb) {
     e.preventDefault();
     if (!boardCanvasOff) return;
@@ -184,6 +179,7 @@
     document.addEventListener('pointerup', onUp);
   }
 
+  // update position while dragging
   function onPointerMove(e) {
     if (!dragging || !dragging.el) return;
     e.preventDefault();
@@ -193,97 +189,96 @@
     dragging.el.style.transform = `translate(${newLeft}px, ${newTop}px)`;
   }
 
+  // drop handler: snap if close to correct cell and cell free, otherwise return to staging
   function onPointerUp(e) {
-  if (!dragging || !dragging.el) return;
-  e.preventDefault();
+    if (!dragging || !dragging.el) return;
+    e.preventDefault();
 
-  const style = dragging.el.style.transform;
-  const m = style.match(/translate\((-?\d+\.?\d*)px,\s*(-?\d+\.?\d*)px\)/);
-  let tx = 0, ty = 0;
-  if (m) { tx = parseFloat(m[1]); ty = parseFloat(m[2]); }
-  const piece = dragging.piece;
-  const el = dragging.el;
+    const style = dragging.el.style.transform;
+    const m = style.match(/translate\((-?\d+\.?\d*)px,\s*(-?\d+\.?\d*)px\)/);
+    let tx = 0, ty = 0;
+    if (m) { tx = parseFloat(m[1]); ty = parseFloat(m[2]); }
+    const piece = dragging.piece;
+    const el = dragging.el;
 
-  const tolerance = Math.max(20, piece.w * 0.18);
+    const tolerance = Math.max(20, piece.w * 0.18);
 
-  // Only snap if close to correct cell AND cell is not occupied
-  const alreadySnapped = pieces.some(
-    p =>
-      p.snapped &&
-      p.row === piece.row &&
-      p.col === piece.col &&
-      p.id !== piece.id
-  );
+    // check if target cell already occupied
+    const alreadySnapped = pieces.some(
+      p =>
+        p.snapped &&
+        p.row === piece.row &&
+        p.col === piece.col &&
+        p.id !== piece.id
+    );
 
-  if (
-    snap &&
-    Math.abs(tx - piece.x) < tolerance &&
-    Math.abs(ty - piece.y) < tolerance &&
-    !alreadySnapped
-  ) {
-    // Snap into place
-    el.style.transform = `translate(${piece.x}px, ${piece.y}px)`;
-    el.classList.add('snapped');
-    piece.snapped = true;
-    piece.el = el;
-    piece.el.style.pointerEvents = 'auto';
-    el.onpointerdown = null;
+    if (
+      snap &&
+      Math.abs(tx - piece.x) < tolerance &&
+      Math.abs(ty - piece.y) < tolerance &&
+      !alreadySnapped
+    ) {
+      // snap into place
+      el.style.transform = `translate(${piece.x}px, ${piece.y}px)`;
+      el.classList.add('snapped');
+      piece.snapped = true;
+      piece.el = el;
+      piece.el.style.pointerEvents = 'auto';
+      el.onpointerdown = null;
 
-    // Remove thumbnail from staging if present
-    if (piece.thumb && piece.thumb.parentNode) piece.thumb.parentNode.removeChild(piece.thumb);
-    piece.thumb = null;
-  } else {
-    // Not snapped, return to staging
-    if (el.parentNode) el.parentNode.removeChild(el);
-    piece.el = null;
-    piece.snapped = false;
+      if (piece.thumb && piece.thumb.parentNode) piece.thumb.parentNode.removeChild(piece.thumb);
+      piece.thumb = null;
+    } else {
+      // return to staging
+      if (el.parentNode) el.parentNode.removeChild(el);
+      piece.el = null;
+      piece.snapped = false;
 
-    // Remove old thumbnail if any
-    if (piece.thumb && piece.thumb.parentNode) piece.thumb.parentNode.removeChild(piece.thumb);
+      if (piece.thumb && piece.thumb.parentNode) piece.thumb.parentNode.removeChild(piece.thumb);
 
-    // Create new thumbnail in staging
-    const thumb = document.createElement('canvas');
-    thumb.className = 'piece-thumb';
-    thumb.width = piece.w;
-    thumb.height = piece.h;
-    thumb.getContext('2d').drawImage(piece.canvas, 0, 0);
-    thumb.style.pointerEvents = 'auto';
-    thumb.style.position = 'relative';
-    stagingEl.appendChild(thumb);
-    piece.thumb = thumb;
-    thumb.addEventListener('pointerdown', ev => startDragFromThumb(ev, piece, thumb));
-    thumb.addEventListener('dblclick', () => forceSnap(piece));
+      const thumb = document.createElement('canvas');
+      thumb.className = 'piece-thumb';
+      thumb.width = piece.w;
+      thumb.height = piece.h;
+      thumb.getContext('2d').drawImage(piece.canvas, 0, 0);
+      thumb.style.pointerEvents = 'auto';
+      thumb.style.position = 'relative';
+      stagingEl.appendChild(thumb);
+      piece.thumb = thumb;
+      thumb.addEventListener('pointerdown', ev => startDragFromThumb(ev, piece, thumb));
+      thumb.addEventListener('dblclick', () => forceSnap(piece));
+    }
+
+    el.classList.remove('dragging');
+    dragging = null;
+    updateInfo();
+    checkComplete();
   }
 
-  el.classList.remove('dragging');
-  dragging = null;
-  updateInfo();
-  checkComplete();
-}
+  // start dragging an already-placed piece
+  function startDragFromBoard(e, piece, el) {
+    e.preventDefault();
+    if (!boardCanvasOff) return;
 
+    el.classList.add('dragging');
+    const boardRect = boardEl.getBoundingClientRect();
+    const style = el.style.transform;
+    const m = style.match(/translate\((-?\d+\.?\d*)px,\s*(-?\d+\.?\d*)px\)/);
+    let tx = 0, ty = 0;
+    if (m) { tx = parseFloat(m[1]); ty = parseFloat(m[2]); }
+    const offsetX = e.clientX - boardRect.left - tx;
+    const offsetY = e.clientY - boardRect.top - ty;
 
-function startDragFromBoard(e, piece, el) {
-  e.preventDefault();
-  if (!boardCanvasOff) return;
+    dragging = { piece, el, offsetX, offsetY };
 
-  el.classList.add('dragging');
-  const boardRect = boardEl.getBoundingClientRect();
-  const style = el.style.transform;
-  const m = style.match(/translate\((-?\d+\.?\d*)px,\s*(-?\d+\.?\d*)px\)/);
-  let tx = 0, ty = 0;
-  if (m) { tx = parseFloat(m[1]); ty = parseFloat(m[2]); }
-  const offsetX = e.clientX - boardRect.left - tx;
-  const offsetY = e.clientY - boardRect.top - ty;
+    try { el.setPointerCapture(e.pointerId); } catch (_) {}
+    const onMove = (ev) => onPointerMove(ev);
+    const onUp = (ev) => { onPointerUp(ev); document.removeEventListener('pointermove', onMove, { passive: false }); document.removeEventListener('pointerup', onUp); };
+    document.addEventListener('pointermove', onMove, { passive: false });
+    document.addEventListener('pointerup', onUp);
+  }
 
-  dragging = { piece, el, offsetX, offsetY };
-
-  try { el.setPointerCapture(e.pointerId); } catch (_) {}
-  const onMove = (ev) => onPointerMove(ev);
-  const onUp = (ev) => { onPointerUp(ev); document.removeEventListener('pointermove', onMove, { passive: false }); document.removeEventListener('pointerup', onUp); };
-  document.addEventListener('pointermove', onMove, { passive: false });
-  document.addEventListener('pointerup', onUp);
-}
-
+  // force place a piece into its correct cell
   function forceSnap(piece) {
     if (!piece.el || piece.snapped === false) {
       const layer = ensurePiecesLayer();
@@ -303,6 +298,7 @@ function startDragFromBoard(e, piece, el) {
     checkComplete();
   }
 
+  // remove non-snapped elements and repopulate staging
   function shufflePieces() {
     pieces.forEach(p => {
       if (!p.snapped) {
@@ -314,6 +310,7 @@ function startDragFromBoard(e, piece, el) {
     updateInfo();
   }
 
+  // show the complete solved puzzle on the board
   function showComplete() {
     ensurePiecesLayer().innerHTML = '';
     pieces.forEach(p => {
@@ -333,26 +330,27 @@ function startDragFromBoard(e, piece, el) {
     checkComplete();
   }
 
+  // update counters shown in UI
   function updateInfo() {
-    // reqPiecesEl is set when creating pieces; keep it in sync with the select too
     reqPiecesEl.textContent = difficulty.value;
     actualPiecesEl.textContent = pieces.length;
     placedCount = pieces.filter(p => p.snapped).length;
     placedEl.textContent = placedCount;
   }
 
+  // check if puzzle is complete and show banner + popup
   function checkComplete() {
-  const done = pieces.length > 0 && pieces.every(p => p.snapped);
-  if (done) {
-    completeBanner.classList.add('show');
-    setTimeout(() => {
-      completeBanner.classList.remove('show');
-      // Show a popup dialog with congratulations
-      showCongratsPopup();
-    }, 2000);
+    const done = pieces.length > 0 && pieces.every(p => p.snapped);
+    if (done) {
+      completeBanner.classList.add('show');
+      setTimeout(() => {
+        completeBanner.classList.remove('show');
+        showCongratsPopup();
+      }, 2000);
+    }
   }
-}
 
+  // setup offscreen canvas from image and render board
   function setupBoardImage(img) {
     const container = document.querySelector('.container');
     const aside = document.querySelector('.puzzle-aside');
@@ -373,11 +371,12 @@ function startDragFromBoard(e, piece, el) {
     renderHint();
   }
 
+  // create puzzle using currentImage and requested difficulty
   function createPuzzleFromCurrentImage() {
     if (!currentImage) return;
     const nRequested = parseInt(difficulty.value, 10) || 20;
     setupBoardImage(currentImage);
-    createPieces(nRequested);      // will create cols*rows pieces (actualPieces may differ)
+    createPieces(nRequested);      // creates cols * rows pieces
     populateStaging();
     updateInfo();
     completeBanner.classList.remove('show');
